@@ -1,107 +1,91 @@
 <template>
-  <section> <TheHeader></TheHeader></section>
-   <section>
+  <section><TheHeader></TheHeader></section>
+  <section>
     <coach-filter @change-filter="changeFilter"></coach-filter>
-   </section>
-   <div>
-    
+  </section>
+  <div>
     <base-button @click="fetchCoach()">Refresh</base-button>
-   <base-link to="/register">Register</base-link>
-   </div>
-   <div v-if="isLoading">
+    <base-link to="/register">Register</base-link>
+  </div>
+  <div v-if="isLoading">
     <base-spinner></base-spinner>
-   </div>
-   <base-card>
-   
-   <section>
-
-   
-   
-    <ul class="valid" :class="{invalid:isLoading}" v-if="hasCoaches">
-      <coach-item v-for="coach in filterCoaches" 
-      :key="coach.id"
-      :id="coach.id"
-      :firstName="coach.firstName"
-      :lastName="coach.lastName"
-      :rate="coach. hourlyRate"
-      :areas="coach.areas"
-      >
-
-      </coach-item>
-
-      
-    </ul>
-    <ul v-else>
-      <li>Not Found</li>
-    </ul>
-   </section>
-   </base-card>
+  </div>
+  <base-card>
+    <section>
+      <ul class="valid" :class="{ invalid: isLoading }" v-if="hasCoaches">
+        <coach-item
+          v-for="coach in filterCoaches"
+          :key="coach.id"
+          :id="coach.id"
+          :firstName="coach.firstName"
+          :lastName="coach.lastName"
+          :rate="coach.hourlyRate"
+          :areas="coach.areas"
+        >
+        </coach-item>
+      </ul>
+      <ul v-else>
+        <li>Not Found</li>
+      </ul>
+    </section>
+  </base-card>
 </template>
 <script>
-import TheHeader from '../nav/TheHeader.vue';
-import CoachItem from './CoachItem.vue';
-import CoachFilter from './CoachFilter.vue';
+import TheHeader from "../nav/TheHeader.vue";
+import CoachItem from "./CoachItem.vue";
+import CoachFilter from "./CoachFilter.vue";
 
-export default{
-  data(){
-    return{
-      isLoading:false,
-      isActivated:{
-        frontend:true,
-        backend:true,
-        career:true
-      }
-
-    }
-  },
-  
-
-  
-   components:{
-    TheHeader,
-      CoachItem,
-      CoachFilter
-   },
-   computed:{
-      filterCoaches(){
-        const coaches=this.$store.getters['coaches/coaches']
-        return coaches.filter(coach=>{
-          if(this.isActivated.frontend && coach.areas.includes('frontend')){
-            return true
-          }
-          if(this.isActivated.backend && coach.areas.includes('backend')){
-            return true
-          }
-          if(this.isActivated.career && coach.areas.includes('career')){
-            return true
-          }
-          return false
-        
-      })
+export default {
+  data() {
+    return {
+      isLoading: false,
+      isActivated: {
+        frontend: true,
+        backend: true,
+        career: true,
       },
-      hasCoaches(){
-         return this.$store.getters['coaches/hasCoaches']
-      }
-   },
-   created(){
-    this.fetchCoach()
-   
+    };
+  },
 
-   },
-   methods:{
-    changeFilter(updateFilter){
-      this.isActivated=updateFilter
+  components: {
+    TheHeader,
+    CoachItem,
+    CoachFilter,
+  },
+  computed: {
+    filterCoaches() {
+      const coaches = this.$store.getters["coaches/coaches"];
+      return coaches.filter((coach) => {
+        if (this.isActivated.frontend && coach.areas.includes("frontend")) {
+          return true;
+        }
+        if (this.isActivated.backend && coach.areas.includes("backend")) {
+          return true;
+        }
+        if (this.isActivated.career && coach.areas.includes("career")) {
+          return true;
+        }
+        return false;
+      });
     },
-     async fetchCoach(){this.isLoading=true
-       await this.$store.dispatch('coaches/fetchCoach')
-      this.isLoading=false
-      
-      
-    }
-    
-
-   }
-}
+    hasCoaches() {
+      return this.$store.getters["coaches/hasCoaches"];
+    },
+  },
+  created() {
+    this.fetchCoach();
+  },
+  methods: {
+    changeFilter(updateFilter) {
+      this.isActivated = updateFilter;
+    },
+    async fetchCoach() {
+      this.isLoading = true;
+      await this.$store.dispatch("coaches/fetchCoach");
+      this.isLoading = false;
+    },
+  },
+};
 </script>
 <style scoped>
 ul {
@@ -109,7 +93,7 @@ ul {
   margin: 0;
   padding: 0;
 }
-.invalid{
+.invalid {
   content-visibility: hidden;
 }
 
@@ -117,7 +101,6 @@ ul {
   display: flex;
   justify-content: space-between;
 }
-
 </style>
 <!-- <style scoped>
 /* Style for the section */
